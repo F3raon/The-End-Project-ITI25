@@ -47,12 +47,12 @@ namespace The_End.Controllers
             }
 
             ModelState.Remove("Category");
-            ModelState.Remove("ImagePath"); // لازم تشيل الـ ImagePath من الـ validation عشان ما يدكش خطأ
+            ModelState.Remove("ImagePath"); 
             if (product != null && ModelState.IsValid)
             {
                 if (product.Image != null && product.Image.Length > 0)
                 {
-                    // حفظ الصورة في فولدر wwwroot/images
+                   
                     var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
                     if (!Directory.Exists(uploadsFolder))
                     {
@@ -69,7 +69,7 @@ namespace The_End.Controllers
                 }
                 else
                 {
-                    // لو مفيش صورة، ممكن تحط صورة افتراضية
+                  
                     product.ImagePath = "/images/default.png";
                 }
 
@@ -102,13 +102,13 @@ namespace The_End.Controllers
             ModelState.Remove("ImagePath");
             if (product != null && ModelState.IsValid)
             {
-                // لو فيه صورة جديدة تم رفعها
+               
                 if (product.Image != null && product.Image.Length > 0)
                 {
                     var oldProduct = await db.Products.AsNoTracking().FirstOrDefaultAsync(p => p.ProductId == product.ProductId);
                     if (oldProduct != null && !string.IsNullOrEmpty(oldProduct.ImagePath) && oldProduct.ImagePath != "/images/default.png")
                     {
-                        // حذف الصورة القديمة من السيرفر
+                     
                         var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", oldProduct.ImagePath.TrimStart('/'));
                         if (System.IO.File.Exists(oldImagePath))
                         {
@@ -116,7 +116,7 @@ namespace The_End.Controllers
                         }
                     }
 
-                    // حفظ الصورة الجديدة
+                  
                     var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
                     var uniqueFileName = Guid.NewGuid().ToString() + "_" + product.Image.FileName;
                     var filePath = Path.Combine(uploadsFolder, uniqueFileName);
@@ -129,7 +129,7 @@ namespace The_End.Controllers
                 }
                 else
                 {
-                    // لو مفيش صورة جديدة، احتفظ بمسار الصورة القديمة
+                    
                     var oldProduct = await db.Products.AsNoTracking().FirstOrDefaultAsync(p => p.ProductId == product.ProductId);
                     product.ImagePath = oldProduct.ImagePath;
                 }
@@ -152,7 +152,7 @@ namespace The_End.Controllers
                 return RedirectToAction("Index");
             }
 
-            // حذف الصورة من السيرفر قبل حذف المنتج
+            
             if (!string.IsNullOrEmpty(product.ImagePath) && product.ImagePath != "/images/default.png")
             {
                 var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", product.ImagePath.TrimStart('/'));
