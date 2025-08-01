@@ -1,0 +1,44 @@
+﻿@model IEnumerable<Category>
+
+<div class="d-flex justify-content-center">
+    <h1 class="text-success">Category List</h1>
+</div>
+
+<br />
+<hr />
+<br />
+
+<table class="table text-center">
+    <thead>
+        <tr>
+            <th scope="col">@Html.DisplayNameFor(e => e.CategoryId)</th>
+            <th scope="col">@Html.DisplayNameFor(e => e.Name)</th>
+            <th scope="col">@Html.DisplayNameFor(e => e.Description)</th>
+            <th scope="col" colspan="3">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td scope="col">@item.CategoryId</td>
+                <td scope="col">@item.Name</td>
+                <td scope="col">@item.Description</td>
+                <td scope="col">
+                    <a asp-controller="Category" asp-action="Details" asp-route-Id="@item.CategoryId" class="btn btn-primary">View</a>
+                </td>
+                <td scope="col">
+                    <a asp-controller="Category" asp-action="Edit" asp-route-Id="@item.CategoryId" class="btn btn-secondary">Edit</a>
+                </td>
+                <td scope="col">
+                    <form asp-controller="Category" asp-action="Delete" asp-route-Id="@item.CategoryId" method="post" onsubmit="return confirm('Are you sure uou want to delete this Category?')">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <a asp-controller="Category" asp-action="Create" class="btn btn-success">Add Category</a>
+    </tfoot>
+</table>

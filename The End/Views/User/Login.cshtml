@@ -1,0 +1,63 @@
+﻿@model User
+@*  @model the End.View.User
+
+@{
+} *@
+@{
+    Layout = "~/Views/Shared/_MyloginLayout.cshtml";
+}
+
+
+
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg border-0 rounded-4">
+                <div class="card-body p-5">
+
+                    <div class="text-center mb-4">
+                        <h2 class="text-success">Login</h2>
+                        <p class="text-muted">Welcome back! Please login to your account.</p>
+                    </div>
+
+                    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+                    <form asp-action="Login">
+
+                        <div class="form-group mb-4">
+                            <label asp-for="Email" class="form-label"></label>
+                            <input asp-for="Email" class="form-control form-control-lg" placeholder="Enter your email" />
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+
+                        <div class="form-group mb-4">
+                            <label asp-for="Password" class="form-label"></label>
+                            <input asp-for="Password" class="form-control form-control-lg" placeholder="Enter your password" type="password" />
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-grid gap-2">
+                            <input type="submit" value="Login" class="btn btn-success btn-lg" />
+                            <a asp-controller="User" asp-action="Index" class="btn btn-outline-secondary btn-lg">Cancel</a>
+                        </div>
+
+                        <div class="text-center mt-4">
+                            <p class="text-muted">
+                                Don't have an account?
+                                <a asp-controller="User" asp-action="Register" class="text-decoration-none">Register</a>
+                            </p>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@* @section Scripts {
+    <script src="~/lib/jquery-validation/dist/jquery.validate.js"></script>
+    <script src="~/lib/jquery-validation-unobtrusive/dist/jquery.validate.unobtrusive.js"></script>
+} *@

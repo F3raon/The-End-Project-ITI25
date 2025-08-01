@@ -1,0 +1,25 @@
+﻿@model User
+
+<div class="d-flex justify-content-center">
+    <h1 class="text-success">User Detalis</h1>
+</div>
+
+<br />
+<hr />
+<br />
+
+
+<div class="d-flex justify-content-center">
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">@Html.DisplayNameFor(e => e.FName):  @Model.FName</h5>
+            <h6 class="card-subtitle mb-2 text-muted">@Html.DisplayNameFor(e => e.LName):  @Model.LName</h6>
+            <h6 class="card-subtitle mb-2 text-muted">@Html.DisplayNameFor(e => e.userId):  @Model.userId</h6>
+           
+            <h6 class="card-subtitle mb-2 text-muted">@Html.DisplayNameFor(e => e.Email):  @Model.Email</h6>
+            <div class="d-flex justify-content-center">
+                <a asp-controller="User" asp-action="Index" class="btn btn-secondary mt-4">Back</a>
+            </div>
+        </div>
+    </div>
+</div>

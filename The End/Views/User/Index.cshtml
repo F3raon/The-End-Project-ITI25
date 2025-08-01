@@ -1,0 +1,52 @@
+﻿@model IEnumerable<User>
+
+<div class="d-flex justify-content-center">
+    <h1 class="text-success">Users List</h1>
+</div>
+
+<br/>
+<hr />
+<br/>
+
+
+<table class="table text-center">
+    <thead>
+        <tr>
+            
+            <th scope="col">@Html.DisplayNameFor(e => e.userId)</th>
+            <th scope="col">@Html.DisplayNameFor(e => e.FName)</th>
+            <th scope="col">@Html.DisplayNameFor(e => e.LName)</th>
+            <th scope="col">@Html.DisplayNameFor(e=>e.Email)</th>
+           
+            <th scope="col" colspan="3">Actions</th>
+            
+        </tr>
+    </thead>
+    <tbody>
+      @foreach (var item in Model)
+        {
+            <tr>
+
+                <th scope="col ">@item.userId</th>
+                <th scope="col ">@item.FName</th>
+                <th scope="col ">@item.LName</th>
+                <th scope="col ">@item.Email</th>
+           
+                <td scope="col">
+                    <a asp-controller="User" asp-action="Details" asp-route-Id="@item.userId" class="btn btn-primary">View</a>
+                </td>
+                <td scope="col">
+                    <a asp-controller="User" asp-action="Edit" asp-route-Id="@item.userId" class="btn btn-secondary">Edit</a>
+                </td>
+                <td scope="col">
+                    <form asp-controller="User" asp-action="Delete" asp-route-Id="@item.userId" method="post" onsubmit="return confirm('Are you sure  want to delete this item?')">
+                        <button type="submit" class="btn btn-danger">Delete</button>
+                    </form>
+                </td>
+            </tr>
+        }
+    </tbody>
+    <tfoot>
+        <a asp-controller="User" asp-action="Register" class="btn btn-success">Add User</a>
+    </tfoot>
+</table>

@@ -1,0 +1,23 @@
+﻿@model Category
+
+<div class="d-flex justify-content-center">
+    <h1 class="text-success">Category Details</h1>
+</div>
+
+<br />
+<hr />
+<br />
+
+<div class="d-flex justify-content-center">
+    <div class="card" style="width: 18rem;">
+        <div class="card-body">
+            <h5 class="card-title">@Html.DisplayNameFor(e => e.Name):  @Model.Name</h5>
+            <h5 class="card-title">@Html.DisplayNameFor(e => e.Description):  @Model.Description</h5>
+            <h6 class="card-subtitle mb-2 text-muted">@Html.DisplayNameFor(e => e.CategoryId):  @Model.CategoryId</h6>
+            <h6 class="card-subtitle mb-2 text-muted">@Html.DisplayNameFor(e => e.CategoryId):  @Model.CategoryId</h6>
+            <div class="d-flex justify-content-center">
+                <a asp-controller="Category" asp-action="Index" class="btn btn-secondary mt-4">Back</a>
+            </div>
+        </div>
+    </div>
+</div>
