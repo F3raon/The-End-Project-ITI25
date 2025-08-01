@@ -10,7 +10,7 @@
 
 <div class="d-flex justify-content-center">
     <div class="card shadow rounded-4" style="width: 22rem;">
-        @* <img src="@Model.Image" class="card-img-top p-3" alt="Product Image" style="height: 200px; object-fit: contain;" /> *@
+        <img src="@Model.ImagePath" class="card-img-top p-3" alt="Product Image" style="height: 200px; object-fit: contain;" />
 
         <div class="card-body text-center">
             <h5 class="card-title text-dark fw-bold">@Model.Title</h5>
@@ -25,7 +25,7 @@
                 @Html.DisplayNameFor(e => e.Description): <span class="text-dark">@Model.Description</span>
             </h6>
             <h6 class="card-subtitle mb-2" style="color:#708090;">
-                @Html.DisplayNameFor(e => e.ImagePath): <span class="text-dark">@Model.ImagePath</span>
+                @Html.DisplayNameFor(e => e.Quantity): <span class="text-dark">@Model.Quantity</span>
             </h6>
             <h6 class="card-subtitle mb-3" style="color:#708090;">
                 @Html.DisplayNameFor(e => e.Category): <span class="text-dark">@Model.Category?.Name</span>

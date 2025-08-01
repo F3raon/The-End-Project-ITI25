@@ -41,8 +41,8 @@ namespace The_End.Models
 
         public string ImagePath { get; set; }
 
-        //[NotMapped]
-        //public IFormFile Image { get; set; }
+        [NotMapped]
+        public IFormFile Image { get; set; }
 
         public int CategoryId { get; set; }
         public virtual Category Category { get; set; }

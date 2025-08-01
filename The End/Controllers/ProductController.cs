@@ -27,63 +27,122 @@ namespace The_End.Controllers
             }
             return View(product);
         }
+
         [HttpGet]
         public IActionResult Create()
         {
-            ViewBag._Categories = new SelectList(db.Categories, "CategoryId", "Name" , "Description");
+            ViewBag._Categories = new SelectList(db.Categories, "CategoryId", "Name");
             return View();
         }
 
         [HttpPost]
-        public IActionResult Create(Product product)
+        public async Task<IActionResult> Create(Product product)
         {
-            var Title = db.Products.FirstOrDefault(e => e.Title == product.Title);
-            if (Title != null)
+            var titleExists = db.Products.FirstOrDefault(e => e.Title == product.Title);
+            if (titleExists != null)
             {
-                ModelState.AddModelError("", "Title Already Exist");
-                ViewBag._Categories = new SelectList(db.Categories, "CategoryId", "Name", "Description");
-                return View();
+                ModelState.AddModelError("Title", "Title Already Exist");
+                ViewBag._Categories = new SelectList(db.Categories, "CategoryId", "Name");
+                return View(product);
             }
 
             ModelState.Remove("Category");
+            ModelState.Remove("ImagePath"); // لازم تشيل الـ ImagePath من الـ validation عشان ما يدكش خطأ
             if (product != null && ModelState.IsValid)
             {
+                if (product.Image != null && product.Image.Length > 0)
+                {
+                    // حفظ الصورة في فولدر wwwroot/images
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+                    if (!Directory.Exists(uploadsFolder))
+                    {
+                        Directory.CreateDirectory(uploadsFolder);
+                    }
+                    var uniqueFileName = Guid.NewGuid().ToString() + "_" + product.Image.FileName;
+                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await product.Image.CopyToAsync(fileStream);
+                    }
+                    product.ImagePath = "/images/" + uniqueFileName;
+                }
+                else
+                {
+                    // لو مفيش صورة، ممكن تحط صورة افتراضية
+                    product.ImagePath = "/images/default.png";
+                }
+
                 db.Products.Add(product);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
 
             ModelState.AddModelError("", "All Fields required");
-            ViewBag._Categories = new SelectList(db.Categories, "CategoryId", "Name", "Description");
-            return View();
+            ViewBag._Categories = new SelectList(db.Categories, "CategoryId", "Name");
+            return View(product);
         }
 
         [HttpGet]
         public IActionResult Edit(int id)
         {
-
             var product = db.Products.Include(e => e.Category).FirstOrDefault(e => e.ProductId == id);
             if (product == null)
             {
                 return RedirectToAction("Index");
             }
-            ViewBag._Categories = new SelectList(db.Categories, "CategoryId", "Name", "Description");
+            ViewBag._Categories = new SelectList(db.Categories, "CategoryId", "Name");
             return View(product);
         }
 
         [HttpPost]
-        public IActionResult Edit(Product product)
+        public async Task<IActionResult> Edit(Product product)
         {
             ModelState.Remove("Category");
+            ModelState.Remove("ImagePath");
             if (product != null && ModelState.IsValid)
             {
+                // لو فيه صورة جديدة تم رفعها
+                if (product.Image != null && product.Image.Length > 0)
+                {
+                    var oldProduct = await db.Products.AsNoTracking().FirstOrDefaultAsync(p => p.ProductId == product.ProductId);
+                    if (oldProduct != null && !string.IsNullOrEmpty(oldProduct.ImagePath) && oldProduct.ImagePath != "/images/default.png")
+                    {
+                        // حذف الصورة القديمة من السيرفر
+                        var oldImagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", oldProduct.ImagePath.TrimStart('/'));
+                        if (System.IO.File.Exists(oldImagePath))
+                        {
+                            System.IO.File.Delete(oldImagePath);
+                        }
+                    }
+
+                    // حفظ الصورة الجديدة
+                    var uploadsFolder = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", "images");
+                    var uniqueFileName = Guid.NewGuid().ToString() + "_" + product.Image.FileName;
+                    var filePath = Path.Combine(uploadsFolder, uniqueFileName);
+
+                    using (var fileStream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await product.Image.CopyToAsync(fileStream);
+                    }
+                    product.ImagePath = "/images/" + uniqueFileName;
+                }
+                else
+                {
+                    // لو مفيش صورة جديدة، احتفظ بمسار الصورة القديمة
+                    var oldProduct = await db.Products.AsNoTracking().FirstOrDefaultAsync(p => p.ProductId == product.ProductId);
+                    product.ImagePath = oldProduct.ImagePath;
+                }
+
                 db.Products.Update(product);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewBag._Categories = new SelectList(db.Categories, "CategoryId", "Name", "Description");
+
+            ViewBag._Categories = new SelectList(db.Categories, "CategoryId", "Name");
             return View(product);
         }
+
         [HttpPost]
         public IActionResult Delete(int id)
         {
@@ -92,10 +151,20 @@ namespace The_End.Controllers
             {
                 return RedirectToAction("Index");
             }
+
+            // حذف الصورة من السيرفر قبل حذف المنتج
+            if (!string.IsNullOrEmpty(product.ImagePath) && product.ImagePath != "/images/default.png")
+            {
+                var imagePath = Path.Combine(Directory.GetCurrentDirectory(), "wwwroot", product.ImagePath.TrimStart('/'));
+                if (System.IO.File.Exists(imagePath))
+                {
+                    System.IO.File.Delete(imagePath);
+                }
+            }
+
             db.Products.Remove(product);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
-
     }
 }

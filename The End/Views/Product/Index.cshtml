@@ -4,14 +4,14 @@
     <h1 class="text-success">Products List</h1>
 </div>
 
-<br/>
+<br />
 <hr />
-<br/>
+<br />
 
 
 <style>
     thead th {
-        background-color: #1E90FF; 
+        background-color: #1E90FF;
         color: white;
         font-weight: bold;
         text-align: center;
@@ -26,11 +26,11 @@
     }
 
     tbody tr:nth-child(even) {
-        background-color: #f2f2f2; 
+        background-color: #f2f2f2;
     }
 
     .table-wrapper {
-        max-height: 600px; 
+        max-height: 600px;
         overflow-y: auto;
         overflow-x: auto;
         border: 1px solid #ccc;
@@ -40,6 +40,12 @@
     .btn-sm {
         padding: 4px 8px;
         font-size: 13px;
+    }
+
+    .product-image {
+        width: 80px;
+        height: 80px;
+        object-fit: contain;
     }
 </style>
 
@@ -52,7 +58,7 @@
                 <th style="background-color: #708090;">@Html.DisplayNameFor(e => e.Price)</th>
                 <th style="background-color: #708090;">@Html.DisplayNameFor(e => e.Description)</th>
                 <th style="background-color: #708090;">@Html.DisplayNameFor(e => e.Quantity)</th>
-                <th style="background-color: #708090;">@Html.DisplayNameFor(e => e.ImagePath)</th>
+                <th style="background-color: #708090;">Image</th>
                 <th style="background-color: #708090;">@Html.DisplayNameFor(e => e.Category)</th>
                 <th colspan="3" style="background-color: #2F4F4F;">Actions</th>
             </tr>
@@ -66,7 +72,12 @@
                     <td>@item.Price</td>
                     <td style="max-width: 250px;">@item.Description</td>
                     <td>@item.Quantity</td>
-                    <td style="max-width: 250px;">@item.ImagePath</td>
+                    <td>
+                        @if (!string.IsNullOrEmpty(item.ImagePath))
+                        {
+                            <img src="@item.ImagePath" alt="@item.Title" class="product-image" />
+                        }
+                    </td>
                     <td>@item.Category?.Name</td>
                     <td>
                         <a asp-controller="Product" asp-action="Details" asp-route-Id="@item.ProductId" class="btn btn-primary btn-sm">View</a>
