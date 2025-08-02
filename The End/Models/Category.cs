@@ -13,8 +13,8 @@ namespace The_End.Models
 
         [MinLength(5, ErrorMessage = "Name Min Length Is 5")]
         [MaxLength(80, ErrorMessage = "Name Max Length Is 80")]
-        [DisplayName("Student Name")]
-        [Column("EmployeeName")]
+        [DisplayName("Category Name")]
+        [Column("CategoryName")]
         public string Name { get; set; }
 
         [Required(ErrorMessage = "Description Is Required")]
